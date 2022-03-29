@@ -24,6 +24,8 @@ Surdify::usage = "Converts expressions with fractional powers to surd form.";
 NormalLine::usage = "";
 FindLine::usage = "";
 RFTest::usage == "";
+PolynomialDivide::usage == "Divides a polynomial. Why this isn't a built in function I don't know.";
+StationaryPoints::usage == "Gives you some stationary points for a given function"
 
 
 DecimalPlaces = DecimalPlaces;
@@ -44,6 +46,22 @@ Begin["`Private`"]
 FindLine[a_,b_,var_]:=Module[{y},y/.Solve[y-a[[2]]==((b[[2]]-a[[2]])/(b[[1]]-a[[1]]))(var - a[[1]]),y]//FullSimplify]
 
 
+SetAttributes[PolynomialDivide,HoldAll]
+PolynomialDivide[numerator_,denominator_,var_]:= PolynomialQuotient[numerator,denominator,var]+PolynomialRemainder[numerator,denominator,var]/denominator
+
+SetAttributes[StationaryPoints,HoldAll]
+StationaryPoints[function_,var_]:= 
+	Module[{x,y,coords},
+	x= Solve[D[function,var]==0,var];
+	y = function/.x;
+     coords= Table[{var/.x[[i]],y[[i]]},{i,Length[x]}]
+	]
+	
+
+
+
+
+
 (* ::Subsection::Closed:: *)
 (*Surdify*)
 
@@ -62,7 +80,7 @@ NumberMarks->True],
 FullForm]\)-> (Surd[n,b])^a})
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*NormalLine*)
 
 
@@ -224,7 +242,7 @@ RestrictedInverse[variable_,expression_,condition_]:=
 	InverseFunction[Function[variable, ConditionalExpression[expression, condition]]]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*DetailedPlot*)
 
 
@@ -463,7 +481,7 @@ DetailedPlot[exp_, args__, opts:OptionsPattern[]] :=
 	]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Turning Point Form*)
 
 
@@ -478,7 +496,11 @@ TurningPointForm[var_, expression_] :=
     ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsubsection:: *)
+(**)
+
+
+(* ::Subsection:: *)
 (*End Statements*)
 
 
