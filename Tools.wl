@@ -52,15 +52,15 @@ PolynomialDivide[numerator_,denominator_,var_]:= PolynomialQuotient[numerator,de
 SetAttributes[StationaryPoints,HoldAll]
 StationaryPoints[function_,var_]:= 
 	Module[{x,y,coords,xcoord},
-	x= Solve[D[function,var]==0,var];
+	x= Solve[D[function,var]==0,var,Reals];
 	y = function/.x;
 	xcoord = var/.x;
      coords= Table[{xcoord[[i]],y[[i]],
-     If[ (function/.(var->(xcoord[[i]] - 1)))< y[[i]], (* left, smaller*)
-		If[(function/.(var-> (xcoord[[i]] + 1)))< y[[i]],"Maximum", (* Right, smaller *)
-			If[(function/.(var-> (xcoord[[i]] + 1)))> y[[i]],"S.P.I","This is a straight line"]], (*Right, Bigger *)
-			If[(function/.(var-> (xcoord[[i]] + 1)))< y[[i]],"S.P.I", (*Right, Smaller *)
-				If[(function/.(var-> (xcoord[[i]] + 1)))> y[[i]], "Minimum", "This is a straight line"]]] (*Right, Bigger *)
+     If[ (function/.(var->(xcoord[[i]] - 0.1)))< y[[i]], (* left, smaller*)
+		If[(function/.(var-> (xcoord[[i]] + 0.1)))< y[[i]],"Maximum", (* Right, smaller *)
+			If[(function/.(var-> (xcoord[[i]] + 0.1)))> y[[i]],"S.P.I","This is a straight line"]], (*Right, Bigger *)
+			If[(function/.(var-> (xcoord[[i]] + 0.1)))< y[[i]],"S.P.I", (*Right, Smaller *)
+				If[(function/.(var-> (xcoord[[i]] + 0.1)))> y[[i]], "Minimum", "This is a straight line"]]] (*Right, Bigger *)
      },{i,Length[x]}]
 	]
 	
