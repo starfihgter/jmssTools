@@ -26,6 +26,7 @@ FindLine::usage = "";
 RFTest::usage == "";
 PolynomialDivide::usage == "Divides a polynomial. Why this isn't a built in function I don't know.";
 StationaryPoints::usage == "Gives you some stationary points for a given function"
+FunctionInfo::usage == "cool information it's very cool"
 
 
 DecimalPlaces = DecimalPlaces;
@@ -69,6 +70,22 @@ StationaryPoints[function_,var_]:=
 
 
 
+SetAttributes[FunctionInfo,HoldAll]
+
+FunctionInfo[expr_,var_]:=
+TableForm[{
+StringForm["Most-Simple form: ``",FullSimplify[expr]],
+StringForm["Shape : ``", "Coming Soon"],
+StringForm["x-intercepts: ``", Solve[expr == 0 ,var]],
+StringForm["y-intercepts: ``", expr/.var -> 0],
+StringForm["Derivative: ``", D[expr,var]],
+StringForm["Stationary Points: ``", StationaryPoints[expr,var]],
+StringForm["Domain: ``", If[FunctionDomain[expr,var],"All Reals","Invalid",FunctionDomain[expr,var]]],
+StringForm["Range: ``", If[FunctionRange[expr,var,y],"All Reals","Invalid",FunctionRange[expr,var,y]]],
+StringForm["Amplitude and Period: ``", "Coming Soon"]
+}]
+
+
 (* ::Subsection::Closed:: *)
 (*Surdify*)
 
@@ -87,7 +104,7 @@ NumberMarks->True],
 FullForm]\)-> (Surd[n,b])^a})
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*NormalLine*)
 
 
@@ -173,7 +190,7 @@ RFTest[exps_,cond_,var_,func_,opts:OptionsPattern[]]:=
 	]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*FTest*)
 
 
