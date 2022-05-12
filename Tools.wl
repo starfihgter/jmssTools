@@ -47,12 +47,14 @@ Begin["`Private`"]
 FindLine[a_,b_,var_]:=Module[{y},y/.Solve[y-a[[2]]==((b[[2]]-a[[2]])/(b[[1]]-a[[1]]))(var - a[[1]]),y]//FullSimplify]
 
 
+(* Alexi's Additions *)
+
 SetAttributes[PolynomialDivide,HoldAll]
 PolynomialDivide[numerator_,denominator_,var_]:= PolynomialQuotient[numerator,denominator,var]+PolynomialRemainder[numerator,denominator,var]/denominator
 
 SetAttributes[StationaryPoints,HoldAll]
 StationaryPoints[function_,var_]:= 
-	Module[{x,y,coords,xcoord},
+	Module[{x,y,coords,xcoord,secderiv},
 	x= Solve[D[function,var]==0,var,Reals];
 	y = function/.x;
 	xcoord = var/.x;
@@ -70,19 +72,21 @@ StationaryPoints[function_,var_]:=
 
 
 
-SetAttributes[FunctionInfo,HoldAll]
+(* And these too *)
 
-FunctionInfo[expr_,var_]:=
+
+FunctionInfo[expr_,var_,y_]:=
 TableForm[{
 StringForm["Most-Simple form: ``",FullSimplify[expr]],
-StringForm["Shape : ``", "Coming Soon"],
+(*StringForm["Shape : ``", "Coming Soon"], *)
 StringForm["x-intercepts: ``", Solve[expr == 0 ,var]],
 StringForm["y-intercepts: ``", expr/.var -> 0],
-StringForm["Derivative: ``", D[expr,var]],
+StringForm["1st Derivative: ``", D[expr,var]],
 StringForm["Stationary Points: ``", StationaryPoints[expr,var]],
+StringForm["2nd Derivative: ``", D[expr,{var,2}]],
 StringForm["Domain: ``", If[FunctionDomain[expr,var],"All Reals","Invalid",FunctionDomain[expr,var]]],
-StringForm["Range: ``", If[FunctionRange[expr,var,y],"All Reals","Invalid",FunctionRange[expr,var,y]]],
-StringForm["Amplitude and Period: ``", "Coming Soon"]
+StringForm["Range: ``", If[FunctionRange[expr,var,y],"All Reals","Invalid",FunctionRange[expr,var,y]]]
+(*StringForm["Amplitude and Period: ``", "Coming Soon"] *)
 }]
 
 
