@@ -27,6 +27,7 @@ RFTest::usage == "";
 PolynomialDivide::usage == "Divides a polynomial. Why this isn't a built in function I don't know.";
 StationaryPoints::usage == "Gives you some stationary points for a given function"
 FunctionInfo::usage == "cool information it's very cool"
+TrigRedefine::usage == "Transforms a trig function into an equivalent trig function"
 
 
 DecimalPlaces = DecimalPlaces;
@@ -59,6 +60,7 @@ StationaryPoints[function_,var_]:=
 	y = function/.x;
 	xcoord = var/.x;
      coords= Table[{xcoord[[i]],y[[i]],
+     (* Sign test with accuracy of =-0.1, second deriv can have inconclusive outcomes *)
      If[ (function/.(var->(xcoord[[i]] - 0.1)))< y[[i]], (* left, smaller*)
 		If[(function/.(var-> (xcoord[[i]] + 0.1)))< y[[i]],"Maximum", (* Right, smaller *)
 			If[(function/.(var-> (xcoord[[i]] + 0.1)))> y[[i]],"S.P.I","This is a straight line"]], (*Right, Bigger *)
@@ -88,6 +90,12 @@ StringForm["Domain: ``", If[FunctionDomain[expr,var],"All Reals","Invalid",Funct
 StringForm["Range: ``", If[FunctionRange[expr,var,y],"All Reals","Invalid",FunctionRange[expr,var,y]]]
 (*StringForm["Amplitude and Period: ``", "Coming Soon"] *)
 }]
+
+
+
+SetAttributes[TrigRedefine, HoldAll]
+TrigRedefine[expression_,targetFunction_,var_]:=
+targetFunction[var]/.Solve[expression,var]
 
 
 (* ::Subsection::Closed:: *)
