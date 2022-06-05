@@ -1,4 +1,4 @@
-# jmssTools - Alexi Edition
+# jmssTools - Star's Edition
 
 ### __A Collection of Mathematica Functions - Useful for VCE Mathematical Methods__
 ![](https://raw.githubusercontent.com/frex-e/jmssTools/master/images/graph.png)
