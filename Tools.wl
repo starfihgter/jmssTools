@@ -28,6 +28,7 @@ PolynomialDivide::usage == "Divides a polynomial. Why this isn't a built in func
 StationaryPoints::usage == "Gives you some stationary points for a given function"
 FunctionInfo::usage == "cool information it's very cool"
 TrigRedefine::usage == "Transforms a trig function into an equivalent trig function"
+NewtonIterative::Usage == "Performs Newton's Approximation to a defined number of interations"
 
 
 DecimalPlaces = DecimalPlaces;
@@ -84,8 +85,9 @@ StringForm["Most-Simple form: ``",FullSimplify[expr]],
 StringForm["x-intercepts: ``", Solve[expr == 0 ,var]],
 StringForm["y-intercepts: ``", expr/.var -> 0],
 StringForm["1st Derivative: ``", D[expr,var]],
-StringForm["Stationary Points: ``", StationaryPoints[expr,var]],
 StringForm["2nd Derivative: ``", D[expr,{var,2}]],
+StringForm["Integral: ``", Integrate[expr,var]],
+StringForm["Stationary Points: ``", StationaryPoints[expr,var]],
 StringForm["Domain: ``", If[FunctionDomain[expr,var],"All Reals","Invalid",FunctionDomain[expr,var]]],
 StringForm["Range: ``", If[FunctionRange[expr,var,y],"All Reals","Invalid",FunctionRange[expr,var,y]]]
 (*StringForm["Amplitude and Period: ``", "Coming Soon"] *)
@@ -96,6 +98,9 @@ StringForm["Range: ``", If[FunctionRange[expr,var,y],"All Reals","Invalid",Funct
 SetAttributes[TrigRedefine, HoldAll]
 TrigRedefine[expression_,targetFunction_,var_]:=
 targetFunction[var]/.Solve[expression,var]
+
+
+NewtonIterative[expr_,initalGuess_,numIts_,var_]:=For[approx=initalGuess;i=0,i<=numIts,i++;approx=approx-(expr/.var->approx)/(D[expr,var]/.var->approx),Print[approx]]
 
 
 (* ::Subsection::Closed:: *)
