@@ -29,6 +29,8 @@ StationaryPoints::usage == "Gives you some stationary points for a given functio
 FunctionInfo::usage == "cool information it's very cool"
 TrigRedefine::usage == "Transforms a trig function into an equivalent trig function"
 NewtonIterative::Usage == "Performs Newton's Approximation to a defined number of interations"
+TransformMatrixQuick::Usage == "Quickly provides a standard transformation Matrix, without fucking around with the basic math pallet."
+InverseFunctionButBetter::Usage == "Provides all possible inverses for the user to determine which one is useful"
 
 
 DecimalPlaces = DecimalPlaces;
@@ -43,7 +45,7 @@ Begin["`Private`"]
 
 
 (* ::Chapter:: *)
-(*My Stuff*)
+(*Alexi's additions (except for findline but i'm too lazy to move it )*)
 
 
 FindLine[a_,b_,var_]:=Module[{y},y/.Solve[y-a[[2]]==((b[[2]]-a[[2]])/(b[[1]]-a[[1]]))(var - a[[1]]),y]//FullSimplify]
@@ -101,6 +103,26 @@ targetFunction[var]/.Solve[expression,var]
 
 
 NewtonIterative[expr_,initalGuess_,numIts_,var_]:=For[approx=initalGuess;i=0,i<=numIts,i++;approx=approx-(expr/.var->approx)/(D[expr,var]/.var->approx),Print[approx]]
+
+
+QuickTransformMatrix[a_,b_,c_,d_,x_,y_,h_,k_,hold_]:=If[hold==Hold,(MatrixForm[{{a,b},{c,d}} ] . MatrixForm[{{x},{y}}] )+ MatrixForm[{{h},{k}}],(({
+ {a, b},
+ {c, d}
+}) . ({
+ {x},
+ {y}
+}))+({
+ {h},
+ {k}
+})]
+
+
+InverseFunctionButBetter[expr_,x_,y_]:=Module[{adjustedExpr},adjustedExpr=expr/.x->y;
+Solve[x==adjustedExpr,y,Reals]]
+
+
+(* ::Subtitle:: *)
+(*Alexi Stuff Fin*)
 
 
 (* ::Subsection::Closed:: *)
