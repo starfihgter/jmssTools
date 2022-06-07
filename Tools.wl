@@ -32,6 +32,7 @@ NewtonIterative::Usage == "Performs Newton's Approximation to a defined number o
 QuickTransformMatrix::Usage == "Quickly provides a standard transformation Matrix, without fucking around with the basic math pallet."
 InverseFunctionButBetter::Usage == "Provides all possible inverses for the user to determine which one is useful"
 PlotIntegratedArea::Usage=="A nice graph to help visualise integrals"
+ImplicitDifferentiate::Usage=="What do you think it does"
 
 
 DecimalPlaces = DecimalPlaces;
@@ -127,6 +128,10 @@ Show[
 	Plot[{function},{var,totalDomLower,totalDomUpper},PlotRange->{plotRangeLower,plotRangeUpper}],
 Plot[{function,secondaryFunction},{var,integralBoundLower,integralBoundUpper},PlotRange->{plotRangeLower,plotRangeUpper},
 Filling->{1->{2}}]]
+
+
+ImplicitDifferentiate[equation_,topvar_,bottomvar_]:=
+Solve[Dt[equation,bottomvar] ,Dt[topvar,bottomvar]]
 
 
 (* ::Subtitle:: *)
