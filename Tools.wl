@@ -29,8 +29,9 @@ StationaryPoints::usage == "Gives you some stationary points for a given functio
 FunctionInfo::usage == "cool information it's very cool"
 TrigRedefine::usage == "Transforms a trig function into an equivalent trig function"
 NewtonIterative::Usage == "Performs Newton's Approximation to a defined number of interations"
-TransformMatrixQuick::Usage == "Quickly provides a standard transformation Matrix, without fucking around with the basic math pallet."
+QuickTransformMatrix::Usage == "Quickly provides a standard transformation Matrix, without fucking around with the basic math pallet."
 InverseFunctionButBetter::Usage == "Provides all possible inverses for the user to determine which one is useful"
+PlotIntegratedArea::Usage=="A nice graph to help visualise integrals"
 
 
 DecimalPlaces = DecimalPlaces;
@@ -119,6 +120,13 @@ QuickTransformMatrix[a_,b_,c_,d_,x_,y_,h_,k_,hold_]:=If[hold==Hold,(MatrixForm[{
 
 InverseFunctionButBetter[expr_,x_,y_]:=Module[{adjustedExpr},adjustedExpr=expr/.x->y;
 Solve[x==adjustedExpr,y,Reals]]
+
+
+PlotIntegratedArea[function_,secondaryFunction_,{totalDomLower_,totalDomUpper_},{plotRangeLower_,plotRangeUpper_},{integralBoundLower_,integralBoundUpper_},var_]:=
+Show[
+	Plot[{function},{var,totalDomLower,totalDomUpper},PlotRange->{plotRangeLower,plotRangeUpper}],
+Plot[{function,secondaryFunction},{var,integralBoundLower,integralBoundUpper},PlotRange->{plotRangeLower,plotRangeUpper},
+Filling->{1->{2}}]]
 
 
 (* ::Subtitle:: *)
