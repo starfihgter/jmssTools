@@ -33,6 +33,7 @@ QuickTransformMatrix::Usage == "Quickly provides a standard transformation Matri
 InverseFunctionButBetter::Usage == "Provides all possible inverses for the user to determine which one is useful"
 PlotIntegratedArea::Usage=="A nice graph to help visualise integrals"
 ImplicitDifferentiate::Usage=="What do you think it does"
+SFTest::Usage=="latr"
 
 
 DecimalPlaces = DecimalPlaces;
@@ -65,7 +66,7 @@ StationaryPoints[function_,var_]:=
 	y = function/.x;
 	xcoord = var/.x;
      coords= Table[{xcoord[[i]],y[[i]],
-     (* Sign test with accuracy of =-0.1, second deriv can have inconclusive outcomes *)
+     (* Sign test with accuracy of +-0.1, second deriv can have inconclusive outcomes *)
      If[ (function/.(var->(xcoord[[i]] - 0.1)))< y[[i]], (* left, smaller*)
 		If[(function/.(var-> (xcoord[[i]] + 0.1)))< y[[i]],"Maximum", (* Right, smaller *)
 			If[(function/.(var-> (xcoord[[i]] + 0.1)))> y[[i]],"S.P.I","This is a straight line"]], (*Right, Bigger *)
@@ -85,18 +86,16 @@ StationaryPoints[function_,var_]:=
 FunctionInfo[expr_,var_,y_]:=
 TableForm[{
 StringForm["Most-Simple form: ``",FullSimplify[expr]],
-(*StringForm["Shape : ``", "Coming Soon"], *)
 StringForm["x-intercepts: ``", Solve[expr == 0 ,var]],
 StringForm["y-intercepts: ``", expr/.var -> 0],
 StringForm["1st Derivative: ``", D[expr,var]],
 StringForm["2nd Derivative: ``", D[expr,{var,2}]],
-StringForm["Integral: ``", Integrate[expr,var]],
+StringForm["Integral: `` + c", Integrate[expr,var]],
 StringForm["Stationary Points: ``", StationaryPoints[expr,var]],
+StringForm["Period: ``", FunctionPeriod[expr,var]],
 StringForm["Domain: ``", If[FunctionDomain[expr,var],"All Reals","Invalid",FunctionDomain[expr,var]]],
 StringForm["Range: ``", If[FunctionRange[expr,var,y],"All Reals","Invalid",FunctionRange[expr,var,y]]]
-(*StringForm["Amplitude and Period: ``", "Coming Soon"] *)
 }]
-
 
 
 SetAttributes[TrigRedefine, HoldAll]
@@ -119,19 +118,36 @@ QuickTransformMatrix[a_,b_,c_,d_,x_,y_,h_,k_,hold_]:=If[hold==Hold,(MatrixForm[{
 })]
 
 
-InverseFunctionButBetter[expr_,x_,y_]:=Module[{adjustedExpr},adjustedExpr=expr/.x->y;
-Solve[x==adjustedExpr,y,Reals]]
+InverseFunctionButBetter[expr_,x_,y_,{domLower_,domUpper_}]:=Module[{adjustedExpr},adjustedExpr=expr/.x->y;
+adjustedExpr = Flatten[y/.Normal[{Solve[x==adjustedExpr,y,Reals]}]];
+adjustedExpr=Insert[adjustedExpr,expr,1]; 
+Plot[adjustedExpr,{x,domLower,domUpper},PlotRange->{domLower,domUpper},PlotLabels->Placed["Expressions",Below]]]
 
 
 PlotIntegratedArea[function_,secondaryFunction_,{totalDomLower_,totalDomUpper_},{plotRangeLower_,plotRangeUpper_},{integralBoundLower_,integralBoundUpper_},var_]:=
-Show[
-	Plot[{function},{var,totalDomLower,totalDomUpper},PlotRange->{plotRangeLower,plotRangeUpper}],
+TableForm[{Show[
+	Plot[{function,secondaryFunction},{var,totalDomLower,totalDomUpper},PlotRange->{plotRangeLower,plotRangeUpper}],
 Plot[{function,secondaryFunction},{var,integralBoundLower,integralBoundUpper},PlotRange->{plotRangeLower,plotRangeUpper},
-Filling->{1->{2}}]]
+Filling->{1->{2}}]],Evaluate[Integrate[Abs[function - secondaryFunction],{var,integralBoundLower,integralBoundUpper}]]}]
 
 
 ImplicitDifferentiate[equation_,topvar_,bottomvar_]:=
 Solve[Dt[equation,bottomvar] ,Dt[topvar,bottomvar]]
+
+
+SetAttributes[SFTest,HoldAllComplete];
+Options[SFTest] = {"Assumptions"->{}};
+
+SFTest[exp_,condition_,equations_,var_,func_,opts:OptionsPattern[]]:=
+	Module[{solutions,f,eq,asum}, (* Set local module *)
+	asum = OptionValue["Assumptions"]//ReleaseHold; (* Set Assumptions *)
+	ClearAll[func]; 
+	eq = If[Head@equations =!= List,{equations},equations]; (*  If equations is not a list, return it as a list with only one item, otherwise just return the list *)
+	
+	solutions = Table[func:=Function[var,exp];If[PowerExpand[FullSimplify[ReleaseHold[eq[[i]]== condition],Assumptions->asum]]===True,ClearAll[func];StringForm["`` is True",eq[[i]]],ClearAll[func];StringForm["`` is False",eq[[i]]]],{i,1,Length[eq]}];
+	ClearAll[func]; (* Above is just evaluating if the expression is true for the assumptions, and then the if-logic for the output *)
+	TableForm[solutions]
+	]
 
 
 (* ::Subtitle:: *)
@@ -226,7 +242,7 @@ Options[RFTest] = {"Assumptions" -> {}};
 InternalTest[exp_, cond_, var_, func_, asum_] :=
     Module[{solution,sss},	
      sss := Function[var,exp];
-	solution = FullSimplify[ReleaseHold[cond]/.{func->sss},Assumptions ->asum];
+	solution = PowerExpand[FullSimplify[ReleaseHold[cond]/.{func->sss},Assumptions ->asum]];
 	solution
     ]
     
@@ -242,25 +258,25 @@ RFTest[exps_,cond_,var_,func_,opts:OptionsPattern[]]:=
 	]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*FTest*)
 
 
 (* ::Text:: *)
-(*I still have no idea how this works*)
+(*I  have  idea how this works*)
 
 
 SetAttributes[FTest,HoldAllComplete];
 Options[FTest] = {"Assumptions"->{}};
 
 FTest[exp_,equations_,var_,func_,opts:OptionsPattern[]]:=
-	Module[{solutions,f,eq,asum},
-	asum = OptionValue["Assumptions"]//ReleaseHold;
-	ClearAll[func];
-	eq = If[Head@equations =!= List,{equations},equations];
+	Module[{solutions,f,eq,asum}, (* Set local module *)
+	asum = OptionValue["Assumptions"]//ReleaseHold; (* Set Assumptions *)
+	ClearAll[func]; 
+	eq = If[Head@equations =!= List,{equations},equations]; (*  If equations is not a list, return it as a list with only one item, otherwise just return the list *)
 	
-	solutions = Table[func:=Function[var,exp];If[FullSimplify[ReleaseHold[eq[[i]]],Assumptions->asum]===True,ClearAll[func];StringForm["`` is True",eq[[i]]],ClearAll[func];StringForm["`` is False",eq[[i]]]],{i,1,Length[eq]}];
-	ClearAll[func];
+	solutions = Table[func:=Function[var,exp];If[PowerExpand[FullSimplify[ReleaseHold[eq[[i]]],Assumptions->asum]]===True,ClearAll[func];StringForm["`` is True",eq[[i]]],ClearAll[func];StringForm["`` is False",eq[[i]]]],{i,1,Length[eq]}];
+	ClearAll[func]; (* Above is just evaluating if the expression is true for the assumptions, and then the if-logic for the output *)
 	TableForm[solutions]
 	]
 
