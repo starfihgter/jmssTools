@@ -77,7 +77,7 @@ StationaryPoints[function_,var_]:=
 	
 
 
-
+POOSITIGHT = 69
 
 
 (* And these too *)
@@ -258,7 +258,7 @@ RFTest[exps_,cond_,var_,func_,opts:OptionsPattern[]]:=
 	]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*FTest*)
 
 
@@ -324,7 +324,7 @@ TurningPointForm[expression_, var_] :=
 
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*RestrictedInverse*)
 
 
@@ -334,7 +334,7 @@ RestrictedInverse[variable_,expression_,condition_]:=
 	InverseFunction[Function[variable, ConditionalExpression[expression, condition]]]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*DetailedPlot*)
 
 
