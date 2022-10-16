@@ -34,6 +34,8 @@ InverseFunctionButBetter::Usage == "Provides all possible inverses for the user 
 PlotIntegratedArea::Usage=="A nice graph to help visualise integrals"
 ImplicitDifferentiate::Usage=="What do you think it does"
 SFTest::Usage=="latr"
+ConfidenceInterval::Usage=="Gives a confidence interval for a given proportion, sample size and confidence level."
+SampleSizeProbabilityTable::Usage=="Generates a Probability vs Sample size table for the Binomial Distribution"
 
 
 DecimalPlaces = DecimalPlaces;
@@ -148,6 +150,14 @@ SFTest[exp_,condition_,equations_,var_,func_,opts:OptionsPattern[]]:=
 	ClearAll[func]; (* Above is just evaluating if the expression is true for the assumptions, and then the if-logic for the output *)
 	TableForm[solutions]
 	]
+
+
+Needs["HypothesisTesting`"]
+ConfidenceInterval[sampleProportion_,size_,confidence_]:=NormalCI[sampleProportion,Sqrt[(sampleProportion(1-sampleProportion))/size],ConfidenceLevel->confidence]
+
+
+SampleSizeProbabilityTable[proportion_,condition_,{lower_,upper_},var_]:=
+Table[{n,Probability[condition,var\[Distributed]BinomialDistribution[n,proportion]]},{n,lower,upper}]//TableForm//N
 
 
 (* ::Subtitle:: *)
