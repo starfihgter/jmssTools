@@ -36,6 +36,7 @@ ImplicitDifferentiate::Usage=="What do you think it does"
 SFTest::Usage=="latr"
 ConfidenceInterval::Usage=="Gives a confidence interval for a given proportion, sample size and confidence level."
 SampleSizeProbabilityTable::Usage=="Generates a Probability vs Sample size table for the Binomial Distribution"
+AverageRateOfChange::Uage=="I Always get this wrong so lets just make this fucking function"
 
 
 DecimalPlaces = DecimalPlaces;
@@ -158,6 +159,9 @@ ConfidenceInterval[sampleProportion_,size_,confidence_]:=NormalCI[sampleProporti
 
 SampleSizeProbabilityTable[proportion_,condition_,{lower_,upper_},var_]:=
 Table[{n,Probability[condition,var\[Distributed]BinomialDistribution[n,proportion]]},{n,lower,upper}]//TableForm//N
+
+
+AverageRateOfChange[function_,{lower_,upper_},var_]:=((function/.var->upper )- (function/.var->lower))/(upper - lower)
 
 
 (* ::Subtitle:: *)
