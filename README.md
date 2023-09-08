@@ -4,7 +4,7 @@
 ![](https://raw.githubusercontent.com/frex-e/jmssTools/master/images/graph.png)
 
 ## A quick note
-This version of JMSS tools has been modified by starfihgter / Alexi.R. This resource also doubles as my personal Mathematica reference for Methods and Spesh. You can find additional functions for various applications that I found useful, with documentation in the Reference.nb file. Maybe I'll update this page, probably not.
+This version of JMSS tools has been modified by starfihgter / Alexi Rampono. This resource also doubles as my personal Mathematica reference for Methods and Spesh. You can find additional functions for various applications that I found useful, with documentation in the Reference.nb file. Maybe I'll update this page, probably not.
 
 Any references to 'documentation.nb' can be found under 'Reference.nb'
 
